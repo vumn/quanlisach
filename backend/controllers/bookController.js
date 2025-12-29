@@ -1,4 +1,5 @@
 import Book from "../models/Book.js";
+import {v2 as cloudinary} from 'cloudinary'
 
 export const getAllBooks = async (req, res) => {
     try {
@@ -26,9 +27,19 @@ export const getBookById = async (req, res) => {
 export const createBook = async (req, res) => {
     try {
         const {name, author, publisher, publishedYear, category, quantity} = req.body;
-        const book = new Book({name, author, publisher, publishedYear, category, quantity});
+        // upload images to cloudinary
+        const uploadImages = req.files.map(async (file)=>{
+            const response= await cloudinary.uploader.upload(file.path);
+            return response.secure_url;
+        })
+        
+        // Wait for all uploads to complete
+
+        const images = await Promise.all(uploadImages);
+        
+        const book = new Book({name, author, publisher, publishedYear, category, quantity, images});
     
-        const newBook = await book.save()
+        const newBook = await book.save();
         res.status(200).json(newBook);
     }
     catch (error) {

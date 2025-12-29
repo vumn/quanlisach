@@ -5,8 +5,11 @@ import { connectDB } from './configs/db.js';
 import bookRouter from './routes/bookRoutes.js';
 import authorRouter from './routes/authorRoutes.js';
 import categoryRouter from './routes/CategoryRoutes.js';
+import connectCloudinary from './configs/cloudinaryConfig.js';
+
 
 dotenv.config();
+connectCloudinary();
 
 const app = express();
 
@@ -18,7 +21,8 @@ app.use(express.json());
 
 app.use("/api/v1/books", bookRouter);
 app.use("/api/v1/authors", authorRouter);
-app.use("/api/v1/categories", categoryRouter)
+app.use("/api/v1/categories", categoryRouter);
+
 
 connectDB().then(() => {
     app.listen(3000, () => {
