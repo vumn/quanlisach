@@ -3,7 +3,7 @@ import {v2 as cloudinary} from 'cloudinary'
 
 export const getAllBooks = async (req, res) => {
     try {
-        const books = await Book.find().sort({createAt: -1});
+        const books = await Book.find().sort({createAt: -1}).populate('author', 'name').populate('category', 'name');
         res.status(200).json(books) 
     }
     catch (error) {
