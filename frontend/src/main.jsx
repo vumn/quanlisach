@@ -1,4 +1,5 @@
 // import { BrowserRouter } from 'react'
+import 'bootstrap/dist/css/bootstrap.css'
 import { createRoot } from 'react-dom/client'
 import {BrowserRouter} from 'react-router-dom';
 import './index.css'
