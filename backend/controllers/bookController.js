@@ -26,7 +26,7 @@ export const getBookById = async (req, res) => {
 
 export const createBook = async (req, res) => {
     try {
-        const {name, author, publisher, publishedYear, category, quantity} = req.body;
+        const {name, author, publisher, publishedYear, category, price, quantity} = req.body;
         // upload images to cloudinary
         const uploadImages = req.files.map(async (file)=>{
             const response= await cloudinary.uploader.upload(file.path);
@@ -37,7 +37,7 @@ export const createBook = async (req, res) => {
 
         const images = await Promise.all(uploadImages);
         
-        const book = new Book({name, author, publisher, publishedYear, category, quantity, images});
+        const book = new Book({name, author, publisher, publishedYear, category, price, quantity, images});
     
         const newBook = await book.save();
         res.status(200).json(newBook);
@@ -50,8 +50,8 @@ export const createBook = async (req, res) => {
 
 export const updateBook = async (req, res) => {
     try {
-        const {name, author, publisher, publishedYear, category, quantity} = req.body;
-        const updatedBook = await Book.findByIdAndUpdate(req.params.id, {name, author, publisher, publishedYear, category, quantityS}, {new: true})
+        const {name, author, publisher, publishedYear, category, price, quantity} = req.body;
+        const updatedBook = await Book.findByIdAndUpdate(req.params.id, {name, author, publisher, publishedYear, category, price ,quantity}, {new: true})
         if (!updatedBook) return res.status(404).json({message: "Không tìm thấy sách"});
         res.status(200).json(updatedBook);
 
