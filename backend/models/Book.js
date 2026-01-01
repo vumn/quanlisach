@@ -6,8 +6,7 @@ const BookSchema = new mongoose.Schema({
         required: true
     },
     author: {
-        type: SchemaTypes.ObjectId,
-        ref: 'Author',
+        type: String,
         required: true
     },
     publisher: {
@@ -19,8 +18,7 @@ const BookSchema = new mongoose.Schema({
         required: true
     },
     category: {
-        type: SchemaTypes.ObjectId,
-        ref: 'Category',
+        type: String,
         required: true
     },
     price: {
