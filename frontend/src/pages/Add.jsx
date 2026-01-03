@@ -124,7 +124,7 @@ const Add = () => {
           </table>
 
           <div className='card-footer d-flex justify-content-end'>
-            <button type='button' className='btn btn-success' onClick={handleSubmit}>Lưu</button>
+            <button type='button' className='btn btn-success' onClick={handleSubmit}>{!loading ? 'Lưu' : 'Đang lưu...'}</button>
           </div>
         </div>
       </div>
