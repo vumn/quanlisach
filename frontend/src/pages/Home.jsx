@@ -29,6 +29,18 @@ const Home = () => {
     fetchData();
   }, [])
   // console.log(data);
+  const handleDelete = async () => {
+    if (!window.confirm("Bạn có chắc muốn xóa cuốn sách này?")) return;
+
+    try {
+      await axiosClient.delete(`/books/${id}`);
+      toast.success("Xóa thành công")
+    }
+    catch (error) {
+      console.error("Lỗi khi xóa sách", error);
+      toast.error("Xóa thất bại");
+    }
+  }
   return (
     <div className='container mt-5'>
       <Link to={'/create'} className='btn btn-primary'>Thêm sách</Link>
@@ -56,12 +68,12 @@ const Home = () => {
               <td>{d.publisher}</td>
               <td>{d.publishedYear}</td>
               <td>{d.category}</td>
-              <td>{d.price}</td>
+              <td>{d.price}.000</td>
               <td>{d.quantity}</td>
               {/* <td></td> */}
               <td>
                 <Link to={`/detail/${d._id}`} className='btn btn-warning ms-0'>Sửa</Link>
-                <button className='btn btn-danger ms-2'>Xóa</button>
+                <button className='btn btn-danger ms-2' onClick={handleDelete}>Xóa</button>
               </td>
             </tr>
           ))}

@@ -1,18 +1,21 @@
 // import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import axiosClient from '../libs/axios';
-
+import toast from 'react-hot-toast'
 
 
 
 const Detail = () => {
 
-    const [book, setBook] = useState(null)
+    const [book, setBook] = useState(null);
+    const [originBook, setOriginBook] = useState(null);
     const {id} = useParams();
-    console.log(id);
+    // console.log(id);
     const [loading, setLoading] = useState(true);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [saving, setSaving] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => { 
@@ -21,6 +24,7 @@ const Detail = () => {
                 const res = await axiosClient.get(`/books/${id}`);
                 console.log("Data: ", res.data)
                 setBook(res.data.book); 
+                setOriginBook(res.data.book);
             }
             catch (error) {
                 console.log("Lỗi khi lấy dữ liệu", error);
@@ -32,11 +36,49 @@ const Detail = () => {
         fetchData();
     }, [id]);
 
+    const handleSave = async () => {
+      if (!book.name.trim() || !book.author.trim() || !book.publisher.trim() || 
+      !book.category.trim()) {
+        toast.error("Vui lòng điền đầy đủ thông tin");
+        return;
+      }
+      setSaving(true);
+      try {
+        await axiosClient.put(`/books/${id}`, book);
+        toast.success("Cập nhật thành công");
+        navigate('/');
+      }
+      catch(error) {
+        console.log("Lỗi khi lưu dữ liệu",error);
+        toast.error("Lỗi khi lưu dữ liệu")
+      }
+      finally {
+        setSaving(false);
+      }
+    }
+
+    const handleDelete = async () => {
+      if (!window.confirm("Bạn có chắc muốn xóa cuốn sách này?")) return;
+
+      try {
+        await axiosClient.delete(`/books/${id}`);
+        toast.success("Xóa thành công");
+        navigate('/');
+      }
+      catch (error) {
+        console.error("Lỗi khi xóa sách", error);
+        toast.error("Xóa thất bại");
+      }
+    }
+
     if (loading) return <div className='text-center mt-5'>Đang tải...</div>
     if (!book) return <div className='text-center mt-5'>Không tìm thấy thông tin sách</div>
 
+    const isChanged = JSON.stringify(book) !== JSON.stringify(originBook);
+
   return (
       <div className='container mt-4'>
+        <Link to='/' className='btn btn-secondary mb-2'>Quay lại</Link>
         <div className='card'>
           <div className='card-header'>
             <h5 className='card-title text-success'>Chi tiết sách</h5>
@@ -113,10 +155,12 @@ const Detail = () => {
           </div>
 
 
-          <div className='card-footer'>
-            <Link to='/'>
-              <button type='button' className='btn btn-secondary'>Quay lại</button>
-            </Link>
+          <div className='card-footer d-flex justify-content-end '>
+            
+            {/* <div className='d-flex justify-content-end'> */}
+              <button type='button' className='btn btn-warning ms-2' disabled={saving || !isChanged} onClick={handleSave}>{saving ? "Đang lưu..." : "Cập nhật"}</button>
+              <button type='button' className='btn btn-danger ms-2' onClick={handleDelete}>Xóa</button>
+            {/* </div> */}
           </div>
         </div>
       </div>
