@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import axiosClient from '../libs/axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Add = () => {
   const navigate = useNavigate();
@@ -58,6 +58,7 @@ const Add = () => {
 
   return (
     <div className='container mt-4'>
+      <Link to='/' className='btn btn-secondary mb-2'>Quay lại</Link>
       <div className='card'>
         <div className='card-header'>
           <h2 className='card-title text-success'>Thêm sách</h2>
