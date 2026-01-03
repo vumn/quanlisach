@@ -16,23 +16,27 @@ const Add = () => {
     quantity: 0,
   });
   const [images, setImages] = useState({ 1: null, 2: null });
+  const handleImageChange = (key, file) => {
+    setImages((prev) => ({ ...prev, [key]: file }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { name, author, publishedYear, publisher, category, price, quantity } = inputData;
     if (!name || !author || !publishedYear || !publisher || !category || !price || !quantity) {
+      console.log(inputData);
       toast.error("Vui lòng điền đầy đủ thông tin");
       return;
     }
     try {
       const formData = new FormData();
-      formData.append(name);
-      formData.append(author);
-      formData.append(publishedYear);
-      formData.append(publisher);
-      formData.append(category);
-      formData.append(price);
-      formData.append(quantity);
+      formData.append('name', name);
+      formData.append('author', author);
+      formData.append('publishedYear',publishedYear);
+      formData.append('publisher', publisher);
+      formData.append('category', category);
+      formData.append('price', price);
+      formData.append('quantity', quantity);
       Object.keys(images).forEach((key) => {
         if (images[key]) formData.append('images', images[key]);
       });
@@ -63,38 +67,65 @@ const Add = () => {
             <tbody>
               <tr>
                 <td className='fw-bold'>Tên sách</td>
-                <td><input type='text' /></td>
+                <td><input onChange={e => setInputData({...inputData,name: e.target.value})} /></td>
               </tr>
               <tr>
                 <td className='fw-bold'>Tác giả</td>
-                <td><input /></td>
+                <td><input onChange={e => setInputData({...inputData,author: e.target.value})}/></td>
               </tr>
               <tr>
                 <td className='fw-bold'>Nhà xuất bản</td>
-                <td><input /></td>
+                <td><input onChange={e => setInputData({...inputData,publisher: e.target.value})}/></td>
               </tr>
               <tr>
                 <td className='fw-bold'>Năm xuất bản</td>
-                <td><input /></td>
+                <td><input onChange={e => setInputData({...inputData,publishedYear: e.target.value})}/></td>
               </tr>
               <tr>
                 <td className='fw-bold'>Thể loại</td>
-                <td><input /></td>
+                <td><input onChange={e => setInputData({...inputData,category: e.target.value})}/></td>
               </tr>
               <tr>
                 <td className='fw-bold'>Giá tiền</td>
-                <td><input /></td>
+                <td><input onChange={e => setInputData({...inputData,price: e.target.value})}/></td>
               </tr>
               <tr>
                 <td className='fw-bold'>Số lượng</td>
-                <td><input /></td>
+                <td><input onChange={e => setInputData({...inputData,quantity: e.target.value})}/></td>
               </tr>
               <tr>
                 <td className='fw-bold'>Hình ảnh</td>
-                <td></td>
+                <td>
+                  <div className="d-flex gap-3">
+                    {Object.keys(images).map((key) => (
+                      <div key={key} className="text-center">
+                        <label htmlFor={`images${key}`} className="image-upload-label" style={{ cursor: 'pointer' }}>
+                          <div className="border rounded d-flex align-items-center justify-content-center" style={{ width: '100px', height: '100px', overflow: 'hidden', background: '#f8f9fa' }}>
+                            {images[key] ? (
+                              <img src={URL.createObjectURL(images[key])} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            ) : (
+                              <span className="text-muted">+ Ảnh {key}</span>
+                            )}
+                          </div>
+                          <input
+                            type="file"
+                            accept='image/*'
+                            id={`images${key}`}
+                            hidden
+                            onChange={e => handleImageChange(key, e.target.files[0])}
+                          />
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
+
+          <div className='card-footer d-flex justify-content-end'>
+            <button type='button' className='btn btn-success' onClick={handleSubmit}>Lưu</button>
+          </div>
         </div>
       </div>
     </div>
