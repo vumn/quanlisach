@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import {Link, useNavigate} from 'react-router-dom'
+import { Link} from 'react-router-dom'
+import axiosClient from '../libs/axios';
 
 const Home = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
-  const idAdd = '-1';
+  // const navigate = useNavigate();
+  // const idAdd = '-1';
 
-  const [detailData, setDetailData] = useState({});
+  // const [detailData, setDetailData] = useState({});
 
   useEffect(() => {
     // axios.get('http://localhost:3000/api/v1/books')
@@ -16,7 +16,7 @@ const Home = () => {
     // .catch(error => console.log(error))
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/v1/books');
+        const response = await axiosClient.get('/books');
         setData(response.data);
       }
       catch (error) {
@@ -31,37 +31,45 @@ const Home = () => {
   // console.log(data);
   return (
     <div className='container mt-5'>
-      <Link to={`/update/${idAdd}`} className='btn btn-primary'>theem sach</Link>
+      <Link to={'/create'} className='btn btn-primary'>Thêm sách</Link>
       <table className='table table-striped table-hover'>
         <thead>
           <tr>
-            <td>ID</td>
-            <td>Ten sach</td>
-            <td>Tac gia</td>
-            <td>Nam xuat ban</td>
-            <td>Nha xuat ban</td>
-            <td>The loai</td>
-            <td>Gia tien</td>
-            <td>So luong</td>
-            <td>Hanh dong</td>
+            {/* <td>ID</td> */}
+            <td>Tên sách</td>
+            <td>Tác giả</td>
+            <td>Nhà xuất bản</td>
+            <td>Năm xuất bản</td>
+            <td>Thể loại</td>
+            <td>Giá tiền</td>
+            <td>Số lượng</td>
+            {/* <td>Hình ảnh</td> */}
+            <td>Hành động</td>
           </tr>
         </thead>
         <tbody>
-          {data.map((d,i) => (
-            <tr>
-              <td>{d._id}</td>
-              <td>{d.name}</td>
-              <td>{d.author.name}</td>
-              <td>{d.publishedYear}</td>
+          {data.map((d) => (
+            <tr >
+              {/* <td>{d._id}</td> */}
+              <td> <Link to={`detail/${d._id}`} className='text-decoration-none text-reset'>{d.name}</Link></td>
+              <td>{d.author}</td>
               <td>{d.publisher}</td>
-              <td>{d.category.name}</td>
+              <td>{d.publishedYear}</td>
+              <td>{d.category}</td>
               <td>{d.price}</td>
               <td>{d.quantity}</td>
+              {/* <td></td> */}
+              <td>
+                <Link to={`/detail/${d._id}`} className='btn btn-warning ms-0'>Sửa</Link>
+                <button className='btn btn-danger ms-2'>Xóa</button>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
-    </div>
+
+      </div>
+      
   )
 }
 

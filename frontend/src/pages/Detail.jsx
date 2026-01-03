@@ -12,7 +12,7 @@ const Detail = () => {
     const {id} = useParams();
     console.log(id);
     const [loading, setLoading] = useState(true);
-    const [selectedImage, setSelectedImage] = useState(null)
+    const [selectedImage, setSelectedImage] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => { 
@@ -46,31 +46,31 @@ const Detail = () => {
               <tbody>
               <tr>
                 <td className='fw-bold'>Tên sách</td>
-                <td> {book.name}</td>
+                <td><input type='text' value={book.name} onChange={e => setBook({...book, name: e.target.value})} /></td>
               </tr>
               <tr>
                 <td className='fw-bold'>Tác giả</td>
-                <td>{book.author}</td>
+                <td><input value={book.author} onChange={e => setBook({...book, author: e.target.value})} /></td>
               </tr>
               <tr>
                 <td className='fw-bold'>Nhà xuất bản</td>
-                <td>{book.publisher}</td>
+                <td><input value={book.publisher} onChange={e => setBook({...book, publisher: e.target.value})}/></td>
               </tr>
               <tr>
                 <td className='fw-bold'>Năm xuất bản</td>
-                <td>{book.publishedYear}</td>
+                <td><input value={book.publishedYear} onChange={e => setBook({...book, publishedYear: e.target.value})}/></td>
               </tr>
               <tr>
                 <td className='fw-bold'>Thể loại</td>
-                <td>{book.category}</td>
+                <td><input value={book.category} onChange={e => setBook({...book, category: e.target.value})} /></td>
               </tr>
               <tr>
                 <td className='fw-bold'>Giá tiền</td>
-                <td>{book.price}</td>
+                <td><input value={book.price} onChange={e => setBook({...book, price: e.target.value})} /></td>
               </tr>
               <tr>
                 <td className='fw-bold'>Số lượng</td>
-                <td>{book.quantity}</td>
+                <td><input value={book.quantity} onChange={e => setBook({...book, quantity: e.target.value})} /></td>
               </tr>
               <tr>
                 <td className='fw-bold'>Hình ảnh</td>
