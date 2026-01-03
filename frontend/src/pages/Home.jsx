@@ -1,26 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { Link} from 'react-router-dom'
 import axiosClient from '../libs/axios';
+import toast from 'react-hot-toast';
 
 const Home = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  // const navigate = useNavigate();
-  // const idAdd = '-1';
-
-  // const [detailData, setDetailData] = useState({});
-
   useEffect(() => {
-    // axios.get('http://localhost:3000/api/v1/books')
-    // .then(response => setData(response.data))
-    // .catch(error => console.log(error))
+
     const fetchData = async () => {
       try {
         const response = await axiosClient.get('/books');
         setData(response.data);
       }
       catch (error) {
-        console.error("Loi ket noi backend", error);
+        console.error("Lỗi kết nối backend", error);
       }
       finally {
         setLoading(false)
@@ -28,21 +22,25 @@ const Home = () => {
     };
     fetchData();
   }, [])
-  // console.log(data);
-  const handleDelete = async () => {
+  const handleDelete = async (id) => {
     if (!window.confirm("Bạn có chắc muốn xóa cuốn sách này?")) return;
 
     try {
       await axiosClient.delete(`/books/${id}`);
-      toast.success("Xóa thành công")
+      setData(prev => prev.filter((book) => book._id !== id));
+      toast.success("Xóa thành công");
+      
     }
     catch (error) {
       console.error("Lỗi khi xóa sách", error);
       toast.error("Xóa thất bại");
     }
   }
+
+  {loading ? "Đang tải dữ liệu" : ""}
   return (
     <div className='container mt-5'>
+      {loading && <div className='text-center'>Đang tải dữ liệu...</div>}
       <Link to={'/create'} className='btn btn-primary'>Thêm sách</Link>
       <table className='table table-striped table-hover'>
         <thead>
@@ -61,7 +59,7 @@ const Home = () => {
         </thead>
         <tbody>
           {data.map((d) => (
-            <tr >
+            <tr key={d._id}>
               {/* <td>{d._id}</td> */}
               <td> <Link to={`detail/${d._id}`} className='text-decoration-none text-reset'>{d.name}</Link></td>
               <td>{d.author}</td>
@@ -73,7 +71,7 @@ const Home = () => {
               {/* <td></td> */}
               <td>
                 <Link to={`/detail/${d._id}`} className='btn btn-warning ms-0'>Sửa</Link>
-                <button className='btn btn-danger ms-2' onClick={handleDelete}>Xóa</button>
+                <button className='btn btn-danger ms-2' onClick={() => handleDelete(d._id)}>Xóa</button>
               </td>
             </tr>
           ))}
