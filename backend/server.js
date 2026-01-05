@@ -12,9 +12,10 @@ dotenv.config();
 connectCloudinary();
 
 const app = express();
+const port = process.env.PORT;
 
 app.use(cors(
-    {origin: "http://localhost:5173"}
+    {origin: "http://localhost:5173", credentials: true }
 ));
 
 app.use(express.json());
@@ -25,7 +26,7 @@ app.use("/api/v1/categories", categoryRouter);
 
 
 connectDB().then(() => {
-    app.listen(3000, () => {
-        console.log("Server đang chạy ở cổng 3000")
+    app.listen(port, () => {
+        console.log("Server đang chạy ở cổng:", port)
     })}
 )

@@ -11,7 +11,13 @@ const Add = () => {
     author: '',
     publishedYear: 0,
     publisher: '',
-    category: '',
+    category: {
+      'Sci-fi': false,
+      'Thiếu nhi': false,
+      'Truyện tranh': false,
+      'Giật gân': false,
+      'Kinh dị': false,
+    },
     price: 0,
     quantity: 0,
   });
@@ -34,7 +40,11 @@ const Add = () => {
       formData.append('author', author);
       formData.append('publishedYear',publishedYear);
       formData.append('publisher', publisher);
-      formData.append('category', category);
+      
+      const category = Object.keys(inputData.category).filter((key) => inputData.category[key]);
+      formData.append('category', JSON.stringify(category));
+
+
       formData.append('price', price);
       formData.append('quantity', quantity);
       Object.keys(images).forEach((key) => {
@@ -84,7 +94,19 @@ const Add = () => {
               </tr>
               <tr>
                 <td className='fw-bold'>Thể loại</td>
-                <td><input onChange={e => setInputData({...inputData,category: e.target.value})}/></td>
+                <td className='d-flex gap-4'>
+                {Object.keys(inputData.category).map((cate, index)=>(
+                <div key={index}>
+                    <input type="checkbox" 
+                    id={`category${index+1}`} 
+                    checked={inputData.category[cate]} 
+                    onChange={()=>setInputData({...inputData,
+                    category: {...inputData.category, [cate]: !inputData.category[cate]
+                }})}/>
+                <label htmlFor={`category${index+1}`}>{cate}</label>
+                </div> 
+            ))}  
+                </td>
               </tr>
               <tr>
                 <td className='fw-bold'>Giá tiền</td>

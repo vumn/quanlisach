@@ -37,6 +37,8 @@ const Home = () => {
     }
   }
 
+  
+
   {loading ? "Đang tải dữ liệu" : ""}
   return (
     <div className='container mt-5'>
@@ -65,7 +67,9 @@ const Home = () => {
               <td>{d.author}</td>
               <td>{d.publisher}</td>
               <td>{d.publishedYear}</td>
-              <td>{d.category}</td>
+              <td>
+                {Array.isArray(d.category) ? d.category.join(', ') : d.category}
+              </td>
               <td>{d.price}.000</td>
               <td>{d.quantity}</td>
               {/* <td></td> */}

@@ -26,7 +26,17 @@ export const getBookById = async (req, res) => {
 
 export const createBook = async (req, res) => {
     try {
-        const {name, author, publisher, publishedYear, category, price, quantity} = req.body;
+        const {name, author, publisher, publishedYear, price, quantity} = req.body;
+        let {category} = req.body;
+
+        if (typeof category === 'string') {
+            // Cố gắng parse, nếu lỗi thì giữ nguyên hoặc gán mảng rỗng
+            try {
+                category = JSON.parse(category);
+            } catch (e) {
+                category = []; 
+            }
+        }
         // upload images to cloudinary
         const uploadImages = req.files.map(async (file)=>{
             const response= await cloudinary.uploader.upload(file.path);
